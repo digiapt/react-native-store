@@ -156,7 +156,7 @@ Model.prototype.update = function(data) {
                     this.databaseData[this.tableName]["rows"][row][i] = data[i];
                 }
 
-                reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
+                //reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
             }
 
         }
@@ -206,7 +206,7 @@ Model.prototype.remove = function(id) {
                 results.push(this.databaseData[this.tableName]["rows"][row]['_id'])
                 delete this.databaseData[this.tableName]["rows"][row];
                 this.databaseData[this.tableName]["totalrows"]--;
-                reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
+                //reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
             }
 
         }
@@ -237,7 +237,7 @@ Model.prototype.add = function(data) {
     this.databaseData[this.tableName].rows[autoinc] = data;
     this.databaseData[this.tableName].autoinc += 1;
     this.databaseData[this.tableName].totalrows += 1;
-    reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
+    //reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
 
     this.init();
     return autoinc;
@@ -248,13 +248,13 @@ Model.prototype.get = function(id) {
     this.where({
         _id: id
     });
-    
+
     return this.limit(1).find();
 };
 
 // 取多条数据
 Model.prototype.find = function() {
-    
+
     var results = [];
     var rows = this.databaseData[this.tableName]["rows"];
 
@@ -293,6 +293,17 @@ Model.prototype.find = function() {
 
     this.init();
     return results;
+};
+
+Model.prototype.findOne = function() {
+  var results = this.find();
+  return results.length === 1 ? results[0] : undefined;
+};
+
+Model.prototype.commit = function() {
+  return reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]).then(() => {
+    return this;
+  });
 };
 
 module.exports = reactNativeStore;
