@@ -67,7 +67,7 @@ reactNativeStore.table = function(tableName) {
 
             if (!databaseData)
                 self.createDataBase().then(function(databaseData) {
-                    self.saveTable(tableName).then(function() {
+                    self.saveTable(tableName).then(function(databaseData) {
                         var model = new Model(tableName, databaseData ? databaseData : {});
                         resolve(model);
                     });
@@ -286,12 +286,11 @@ Model.prototype.find = function() {
     }
 
     if (typeof(this._limit) === 'number') {
-        return results.slice(this._offset, this._limit + this._offset);
-    } else {
-        return results;
+        results =  results.slice(this._offset, this._limit + this._offset);
     }
 
     this.init();
+
     return results;
 };
 
